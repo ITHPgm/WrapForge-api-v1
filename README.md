@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # WrapForge Build Engine — production-oriented backend foundation
 
 A queue-backed Web-to-App build service for generating **signed Android APK/AAB** packages and **iOS IPA** packages. The service accepts a complete build request, records an immutable build configuration, queues compilation, persists build events, and serves generated artifacts only to the owning API identity.
@@ -225,3 +226,7 @@ Vercel is suitable for a static/Next.js dashboard frontend, not for this Gradle/
 ## License and reuse
 
 This engine package is original integration code for the WrapForge workstream. The supplied Android/iOS templates and scripts are intended for modification. Before merging code from WrapForge/WrapForge2 or any external repository, preserve its license and attribution notices and review each dependency's licence and security posture.
+=======
+# WrapForge-api-v1
+This wrapforge api v1 
+>>>>>>> d8beaf53d930f8174600eed3228851f570d5ac11
