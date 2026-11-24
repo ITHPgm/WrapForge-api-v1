@@ -1,0 +1,20 @@
+{
+  "platform": "ios",
+  "app_name": "Example Portal",
+  "package_id": "com.example.portal",
+  "website_url": "https://example.com",
+  "formats": ["ipa"],
+  "features": {
+    "launcher_icon": true,
+    "allow_screenshots": true,
+    "show_loading_indicator": true,
+    "allow_zoom": true,
+    "orientation": "portrait",
+    "downloads_enabled": true,
+    "file_uploads_enabled": true,
+    "external_links": "in_app_browser",
+    "javascript_enabled": true,
+    "primary_color": "#635BFF",
+    "app_icon_png_base64": null
+  }
+}

@@ -1,0 +1,25 @@
+# Secrets and local configuration
+.env
+.env.*.local
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+.venv-*/
+.pytest_cache/
+.coverage
+
+# Build outputs and local state
+var/
+build/
+dist/
+*.xcarchive/
+*.ipa
+*.apk
+*.aab
+*.jks
+*.keystore
+.DS_Store

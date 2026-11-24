@@ -1,0 +1,15 @@
+.env
+.git
+__pycache__
+*.pyc
+*.db
+var/
+artifacts/
+builds/
+*.jks
+*.keystore
+*.p12
+*.mobileprovision
+*.ipa
+*.apk
+*.aab

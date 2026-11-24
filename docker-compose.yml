@@ -1,0 +1,79 @@
+name: wrapforge-engine
+services:
+  postgres:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: wrapforge
+      POSTGRES_USER: wrapforge
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U wrapforge -d wrapforge"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    command: ["redis-server", "--appendonly", "yes", "--requirepass", "${REDIS_PASSWORD:?Set REDIS_PASSWORD in .env}"]
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "${REDIS_PASSWORD}", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      DATABASE_URL: postgresql+psycopg://wrapforge:${POSTGRES_PASSWORD}@postgres:5432/wrapforge
+      REDIS_URL: redis://:${REDIS_PASSWORD}@redis:6379/0
+      ARTIFACT_ROOT: /var/lib/wrapforge/artifacts
+      WORK_ROOT: /var/lib/wrapforge/workspaces
+      CONFIG_SNAPSHOT_ROOT: /var/lib/wrapforge/configurations
+      SIGNING_ROOT: /var/lib/wrapforge/signing
+    command: ["sh", "-c", "alembic upgrade head && uvicorn engine.api.app:app --host 0.0.0.0 --port 8000 --proxy-headers"]
+    ports:
+      - "127.0.0.1:8000:8000"
+    volumes:
+      - wrapforge_data:/var/lib/wrapforge
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  android-worker:
+    build:
+      context: .
+      dockerfile: Dockerfile.android-worker
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      DATABASE_URL: postgresql+psycopg://wrapforge:${POSTGRES_PASSWORD}@postgres:5432/wrapforge
+      REDIS_URL: redis://:${REDIS_PASSWORD}@redis:6379/0
+      ARTIFACT_ROOT: /var/lib/wrapforge/artifacts
+      WORK_ROOT: /var/lib/wrapforge/workspaces
+      CONFIG_SNAPSHOT_ROOT: /var/lib/wrapforge/configurations
+      SIGNING_ROOT: /var/lib/wrapforge/signing
+    volumes:
+      - wrapforge_data:/var/lib/wrapforge
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    command: ["python", "-m", "engine.worker.worker_entry", "--queue", "android-builds"]
+
+volumes:
+  postgres_data:
+  redis_data:
+  wrapforge_data:

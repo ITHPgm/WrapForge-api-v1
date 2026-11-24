@@ -1,0 +1,9 @@
+<resources>
+    <style name="WrapForgeTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:fontFamily">sans</item>
+        <item name="android:statusBarColor">@color/wrapforge_status_bar</item>
+        <item name="android:navigationBarColor">@color/wrapforge_navigation_bar</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowActionModeOverlay">true</item>
+    </style>
+</resources>
